@@ -12,6 +12,26 @@ def test_content_type_header():
     content_type = headers['content-type'] #обращение по ключу 'content-type'
     header = content_type
     for elem in content_type.split(';'): #разбиваем строку по символу "";" и итерируемся по возвращенному листу
-        if elem.strip() == 'application/json':
+        if elem.strip() == 'application/json':  # метод sprip убирает пробелы по краям
             header = elem.strip()
     assert header == 'application/json'
+
+# Проверка cуществования всех полей Model (Fact)
+def model_fact():
+    pass
+
+# Проверка параметра animal_type в Endpoints (Fact)
+def animal_endpoints_fact():
+    pass
+
+# Проверка параметра amount в Endpoints (Fact)
+def amount_endpoints_fact():
+    pass
+
+# Проверка рандома вывода фактов по 5 попыткам
+def random_fact():
+    pass
+
+# Проверка вывода факта по id
+def id_fact():
+    pass
