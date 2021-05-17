@@ -57,4 +57,12 @@ def random_fact():
         
 # Проверка вывода факта по id
 def id_fact():
-    pass
+    url = 'https://cat-fact.herokuapp.com/facts/random?'
+    id_fact_spec = {'591f9894d369931519ce358f': 'A female cat will be pregnant for approximately 9 weeks - between 62 and 65 days from conception to delivery.',
+                    '591f98803b90f7150a19c229': 'In an average year, cat owners in the United States spend over $2 billion on cat food.',
+                    '591f7aab0cf1d60ee8afcd62': 'The cat\'s clavicle, or collarbone, does not connect with other bones but is buried in the muscles of the shoulder region. This lack of a functioning collarbone allows them to fit through any opening the size of their head.'
+                    }
+    for id_key in id_fact_spec:
+        response = requests.get(url, params={'_id': id_key})
+        data = response.json()
+        assert data['type'] == id_key
