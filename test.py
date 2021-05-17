@@ -1,4 +1,5 @@
 import pytest
+import requests
 import request
 
 # Проверка, что status_code = 200
@@ -28,7 +29,14 @@ def model_fact():
 
 # Проверка параметра animal_type в Endpoints (Fact)
 def animal_endpoints_fact():
-    pass
+    url = 'https://cat-fact.herokuapp.com/facts/random?'
+    # https: // cat-fact.herokuapp.com/facts/random?animal_type = cat & amount = 2
+    animal_type_spec = 'cat'
+    animal_type_list = ['cat', 'dog', 'snail', 'horse']
+    for type in animal_type_list:
+        response = requests.get(url, params={'type':type})
+        data = response.json()
+        assert data['type'] == animal_type_spec
 
 # Проверка параметра amount в Endpoints (Fact)
 def amount_endpoints_fact():
