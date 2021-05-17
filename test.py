@@ -30,7 +30,6 @@ def model_fact():
 # Проверка параметра animal_type в Endpoints (Fact)
 def animal_endpoints_fact():
     url = 'https://cat-fact.herokuapp.com/facts/random?'
-    # https: // cat-fact.herokuapp.com/facts/random?animal_type = cat & amount = 2
     animal_type_spec = 'cat'
     animal_type_list = ['cat', 'dog', 'snail', 'horse']
     for type in animal_type_list:
@@ -40,7 +39,12 @@ def animal_endpoints_fact():
 
 # Проверка параметра amount в Endpoints (Fact)
 def amount_endpoints_fact():
-    pass
+    url = 'https://cat-fact.herokuapp.com/facts/random?'
+    amount_list = [1, 2, 250, 500]
+    for amount in amount_list:
+        response = requests.get(url, params={'amount': amount})
+        data = response.json()
+        assert len(data) == amount
 
 # Проверка рандома вывода фактов по 5 попыткам
 def random_fact():
