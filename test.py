@@ -48,8 +48,13 @@ def amount_endpoints_fact():
 
 # Проверка рандома вывода фактов по 5 попыткам
 def random_fact():
-    pass
-
+    status_code, headers, fact_json = request.simple_request()
+    facts_list = []
+    for _ in range(5):
+        fact = fact_json['text']
+        assert fact in facts_list
+        facts_list.append(fact)
+        
 # Проверка вывода факта по id
 def id_fact():
     pass
