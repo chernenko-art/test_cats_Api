@@ -18,7 +18,13 @@ def test_content_type_header():
 
 # Проверка cуществования всех полей Model (Fact)
 def model_fact():
-    pass
+    status_code, headers, fact_json = request.simple_request()
+    key_list_spec = ['_id', '_v', 'user', 'text', 'updatedAt',
+                     'sendDate', 'deleted', 'source', 'type', 
+                     'status.verified', 'status.feedback', 
+                     'status.sentCount']
+    for key in fact_json:
+        assert key in key_list_spec
 
 # Проверка параметра animal_type в Endpoints (Fact)
 def animal_endpoints_fact():
