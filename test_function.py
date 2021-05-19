@@ -73,9 +73,9 @@ def test_random_fact():
     for _ in range(5):
         status_code, headers, fact_json = request.simple_request()
         fact = fact_json['text']
-        assert fact not in facts_list
         facts_list.append(fact)
-# Реализовать логику неповторяемости хотя бы 1 элемента
+    assert len(set(facts_list)) > 1 # Проверка уникальности хотя бы 1 значения
+    
 
 # Проверка вывода факта по id
 def test_id_fact():
