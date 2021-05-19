@@ -53,6 +53,18 @@ def test_amount():
         response = requests.get(url, params={'amount': amount})
         data = response.json()
         assert len(data) == amount
+    
+    # Проверка вывода 1 факта
+    response_1_fact = requests.get(url, params={'amount': 1})
+    data_1_fact = response_1_fact.json()
+    assert type(data_1_fact) == type(dict())
+
+    # Проверка негативных значений
+    negative_amount_list = [501, 0, -1]
+    for amount in negative_amount_list:
+        response_negativ_fact = requests.get(url, params={'amount': amount})
+        status_code = response_negativ_fact.ok
+        assert status_code == False
        
 
 # Проверка рандома вывода фактов по 5 попыткам
