@@ -28,6 +28,11 @@ def test_key():
                      'createdAt', '__v', 'used']  # поля 'createdAt', '__v', 'used' - отсутствуют в спецификации
     for key in fact_json:
         assert key in key_list_spec
+    
+    # Проверка поля 'status'
+    key_list_status = ['verified', 'feedback', 'sentCount']
+    for key in fact_json['status']:
+        assert key in key_list_status
 
 
 # Проверка параметра animal_type

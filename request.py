@@ -2,7 +2,6 @@
 import requests
 import json
 
-
 def simple_request(url = 'https://cat-fact.herokuapp.com/facts/random'):
     resp = requests.get(url)
 
