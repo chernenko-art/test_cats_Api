@@ -1,38 +1,51 @@
 import pytest
 import requests
-import request
+# from requests import get
 
 
 # Проверка, что status_code = 200
 def test_check_status_code():
-    status_code, headers, fact_json = request.simple_request()
-    assert status_code == 200
+    url = 'https://cat-fact.herokuapp.com/facts/random?'
+    response = requests.get(url)
+    assert response.status_code == 200
 
 
 # Проверка, что в заголовках есть ключ 'Contetn-Type' и он содержит 'application/json'
 def test_content_type_header():
-    status_code, headers, fact_json = request.simple_request()
-    content_type = headers['content-type'] #обращение по ключу 'content-type'
-    header = content_type
-    for elem in content_type.split(';'): #разбиваем строку по символу "";" и итерируемся по возвращенному листу
-        if elem.strip() == 'application/json':  # метод sprip убирает пробелы по краям
-            header = elem.strip()
-    assert header == 'application/json'
-
+    url = 'https://cat-fact.herokuapp.com/facts/random?'
+    response = requests.get(url)
+    content_type = response.headers['content-type'] #обращение по ключу 'content-type'
+    header_list = [elem.strip() for elem in content_type.split(';')]
+    assert 'application/json' in header_list
+    
 
 # Проверка cуществования ключей в теле ответа
 def test_key():
-    status_code, headers, fact_json = request.simple_request()
-    key_list_spec = ['_id', '_v', 'user', 'text', 'updatedAt', 'sendDate',
-                    'deleted', 'source', 'type', 'status',
-                     'createdAt', '__v', 'used']  # поля 'createdAt', '__v', 'used' - отсутствуют в спецификации
-    for key in fact_json:
-        assert key in key_list_spec
+    url = 'https://cat-fact.herokuapp.com/facts/random?'
     
-    # Проверка поля 'status'
-    key_list_status = ['verified', 'feedback', 'sentCount']
-    for key in fact_json['status']:
-        assert key in key_list_status
+    # задаем списки ключей, определенные в документации
+    key_list_spec = ['_id', '_v', 'user', 'text', 'updatedAt', 'sendDate',
+                    'deleted', 'source', 'type', 'status']
+    key_list_spec_status = ['verified', 'feedback', 'sentCount']
+    
+    # формирование списков фактических ключей в response
+    response = requests.get(url)
+    key_list_fact = [key.strip() for key in response.json()]
+    key_list_fact_status = [key.strip() for key in response.json()['status']]
+
+    # формирование списков фактических ключей, отсутствующих в документации   
+    key_error_list = [key for key in key_list_fact \
+        if key not in key_list_spec]
+    key_error_list_status = [key for key in key_list_fact_status \
+        if key not in key_list_spec_status]
+
+    # логика определения соответствия фактических ключей документации
+    if len(key_error_list) != 0 or len(key_error_list_status) != 0:
+        key_list_spec.extend(key_list_spec_status)
+        key_error_list.extend(key_error_list_status)
+        assert key_list_spec == key_error_list
+    else:
+        assert True
 
 
 # Проверка параметра animal_type
@@ -69,10 +82,11 @@ def test_amount():
 
 # Проверка рандома вывода фактов по 5 попыткам
 def test_random_fact():
+    url = 'https://cat-fact.herokuapp.com/facts/random?'
     facts_list = []
     for _ in range(5):
-        status_code, headers, fact_json = request.simple_request()
-        fact = fact_json['text']
+        response = requests.get(url)
+        fact = response.json()['text']
         facts_list.append(fact)
     assert len(set(facts_list)) > 1 # Проверка уникальности хотя бы 1 значения
     
