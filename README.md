@@ -13,12 +13,12 @@
 * `test_id_fact()` - проверка вывода факта по id
 ## Запуск и использование
 
-*! Автотесты реализованы при помощи **`Python3`**. Для корректной работы кода, необходима установка библиотек `pytest`, `requests`.*
+* Автотесты реализованы при помощи **`Python3`**. Для корректной работы кода, необходима установка библиотек `pytest`, `requests`.*
 
-Для запуска автотеста необходимо ввести команду **$ pytest** в *terminal* (*в bash используйте команду `pytest-3`*):
+Для запуска автотеста необходимо ввести команду **$ pytest** в *terminal*:
 * Запустить все тесты: 
 ``` 
-$ pytest <MODULE> 
+$ pytest test_function.py 
 ```
 * Запустить определенный тест: 
 ``` 
@@ -36,7 +36,7 @@ def test_check_status_code():
 ```
 * *Запуск теста (осуществляется через модуль `pytest`)* 
 ```
-chernenkoac@DESKTOP-HJKEQ8G:~/prog/test_cats_api$ pytest-3 test_function.py::test_check_status_code
+$ pytest-3 test_function.py::test_check_status_code
 ====================== test session starts ======================
 platform linux -- Python 3.8.5, pytest-4.6.9, py-1.8.1, pluggy-0.13.0
 rootdir: /home/chernenkoac/prog/test_cats_api
