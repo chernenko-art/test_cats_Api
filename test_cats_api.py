@@ -1,19 +1,18 @@
 import pytest
-import requests
-# from requests import get
+from requests import get
 
 
 # Проверка, что status_code = 200
 def test_check_status_code():
     url = 'https://cat-fact.herokuapp.com/facts/random?'
-    response = requests.get(url)
+    response = get(url)
     assert response.status_code == 200
 
 
 # Проверка, что в заголовках есть ключ 'Contetn-Type' и он содержит 'application/json'
 def test_content_type_header():
     url = 'https://cat-fact.herokuapp.com/facts/random?'
-    response = requests.get(url)
+    response = get(url)
     content_type = response.headers['content-type'] #обращение по ключу 'content-type'
     header_list = [elem.strip() for elem in content_type.split(';')]
     assert 'application/json' in header_list
@@ -29,7 +28,7 @@ def test_key():
     key_list_spec_status = ['verified', 'feedback', 'sentCount']
     
     # формирование списков фактических ключей в response
-    response = requests.get(url)
+    response = get(url)
     key_list_fact = [key.strip() for key in response.json()]
     key_list_fact_status = [key.strip() for key in response.json()['status']]
 
@@ -53,7 +52,7 @@ def test_animal_type():
     url = 'https://cat-fact.herokuapp.com/facts/random?'
     animal_type_list = ['cat', 'dog', 'snail', 'horse']
     for type in animal_type_list:
-        response = requests.get(url, params={'animal_type':type})
+        response = get(url, params={'animal_type':type})
         data = response.json()
         assert data['type'] == type
 
@@ -63,19 +62,19 @@ def test_amount():
     url = 'https://cat-fact.herokuapp.com/facts/random?'
     amount_list = [2, 250, 500]
     for amount in amount_list:
-        response = requests.get(url, params={'amount': amount})
+        response = get(url, params={'amount': amount})
         data = response.json()
         assert len(data) == amount
     
     # Проверка вывода 1 факта
-    response_1_fact = requests.get(url, params={'amount': 1})
+    response_1_fact = get(url, params={'amount': 1})
     data_1_fact = response_1_fact.json()
     assert type(data_1_fact) == type(dict())
 
     # Проверка негативных значений
     negative_amount_list = [501, 0, -1]
     for amount in negative_amount_list:
-        response_negativ_fact = requests.get(url, params={'amount': amount})
+        response_negativ_fact = get(url, params={'amount': amount})
         status_code = response_negativ_fact.ok
         assert status_code == False
        
@@ -85,7 +84,7 @@ def test_random_fact():
     url = 'https://cat-fact.herokuapp.com/facts/random?'
     facts_list = []
     for _ in range(5):
-        response = requests.get(url)
+        response = get(url)
         fact = response.json()['text']
         facts_list.append(fact)
     assert len(set(facts_list)) > 1 # Проверка уникальности хотя бы 1 значения
@@ -99,6 +98,6 @@ def test_id_fact():
                     '6094b4be86cf590017ab68b0': 'Cats are the better pets in the world.'
                     }
     for id_key in id_fact_spec.keys():
-        response = requests.get(url + id_key)
+        response = get(url + id_key)
         data = response.json()
         assert data['text'] == id_fact_spec[id_key]
