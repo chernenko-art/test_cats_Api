@@ -5,7 +5,7 @@
 
  Реализация функционального тестирования API [cat-fact.herokuapp.com](https://cat-fact.herokuapp.com) в среде `Postman`, с использованием следующего набора тестов:
 
-* **коллекция `Cats Facts Api (tests from documentation)`** - содержит следующие функциональные тесты, согласно [документации.](https://alexwohlbruck.github.io/cat-facts/docs/):
+* **коллекция `Cats Facts Api (tests from documentation)`** - содержит следующие функциональные тесты, согласно [документации](https://alexwohlbruck.github.io/cat-facts/docs/):
     * *`Some fact`* - проверка случайного факта
     * *`Fact by its ID`* - проверка факта по иденкификатору
 * **коллекция `Cats Facts Api (JS auto-tests)`** - содердит следующие функциональные автотесты, реализованные при помощи `JavaScript`:
@@ -25,8 +25,6 @@
 ![](Screenshots/import2.png)
 
 **Запустить определенный тест:**
-
-![](Screenshots/run_1_test.png)
 
 *Пример запуска теста `Check status Code`:*
 
