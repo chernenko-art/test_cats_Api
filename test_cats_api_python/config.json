@@ -3,5 +3,6 @@
         "schema": "https",
         "host": "cat-fact.herokuapp.com",
         "port": "443"
-    }
+    },
+    "level_loggin": "DEBUG"
 }
