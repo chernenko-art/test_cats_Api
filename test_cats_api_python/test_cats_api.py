@@ -9,14 +9,14 @@ def level_logging():
     json_file = open(
         '/home/chernenkoac/prog/test_cats_api/test_cats_api_python/config.json', 'r').read()
     json_body = json.loads(json_file)
-    numeric_level = getattr(logging, json_body["level_loggin"].upper(), None)
+    numeric_level = getattr(logging, json_body["log"]["level"].upper(), None)
     return numeric_level
 
 
 logging.basicConfig(level=level_logging(),
                     format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                     datefmt='%m-%d %H:%M',
-                    filename='sum.log'
+                    filename='tests.log'
                     )
 
 
@@ -35,8 +35,9 @@ def test_content_type_header(url):
     logging.info(f'Run test_content_type_header')
     response = get(url + endpoint)
     content_type = response.headers['content-type'] # referencing the 'content-type' key
+    logging.debug(f'Response headers: {response.headers}')
     header_list = [elem.strip() for elem in content_type.split(';')]
-    logging.info(f'Server response expected = "application/json", response header result = {header_list}')
+    logging.info(f'Server response expected = ["application/json"], response header result = {header_list}')
     assert 'application/json' in header_list
     
 
@@ -48,16 +49,17 @@ def test_key(url):
     # set the key lists defined in the documentation
     key_list_spec = ['_id', '_v', 'user', 'text', 'updatedAt', 'sendDate',
                     'deleted', 'source', 'type', 'status']
-    logging.info(f'Expected list of keys: {key_list_spec}')
+    logging.debug(f'Expected list of keys: {key_list_spec}')
     key_list_spec_status = ['verified', 'feedback', 'sentCount']
-    logging.info(f'Expected list of keys for "status": {key_list_spec_status}')
+    logging.debug(f'Expected list of keys for "status": {key_list_spec_status}')
     
     # generating lists of actual keys in response
     response = get(url + endpoint)
+    logging.debug(f'Response headers: {response.headers}')
     key_list_fact = [key.strip() for key in response.json()]
-    logging.info(f'Response json list of keys: {key_list_fact}')
+    logging.debug(f'Response json list of keys: {key_list_fact}')
     key_list_fact_status = [key.strip() for key in response.json()['status']]
-    logging.info(f'Response json list of keys for "status": {key_list_fact_status}')
+    logging.debug(f'Response json list of keys for "status": {key_list_fact_status}')
 
     # generation of lists of actual keys that are missing from the documentation
     key_error_list = [key for key in key_list_fact \
@@ -65,13 +67,15 @@ def test_key(url):
     key_error_list_status = [key for key in key_list_fact_status \
         if key not in key_list_spec_status]
 
-    logging.error(f'Response json key are not in the documentation: common - {key_error_list} for status keys - {key_error_list_status}')
     # logic for determining the correspondence of actual documentation keys
-    if len(key_error_list) != 0 or len(key_error_list_status) != 0:
-        key_list_spec.extend(key_list_spec_status)
-        key_error_list.extend(key_error_list_status)
+    if len(key_error_list) != 0:
+        logging.error(f'Response json key are not in the documentation: common - {key_error_list}')
         assert key_list_spec == key_error_list
+    elif len(key_error_list_status) != 0:
+        logging.error(f'Response json key are not in the documentation: for status keys - {key_error_list_status}')
+        assert key_list_spec_status == key_error_list_status
     else:
+        logging.info('Everyone keys in response match the keys in documentation')
         assert True
 
 
@@ -82,6 +86,7 @@ def test_animal_type(url):
     animal_type_list = ['cat', 'dog', 'snail', 'horse']
     for type in animal_type_list:
         response = get(url + endpoint, params={'animal_type': type})
+        logging.debug(f'Response headers: {response.headers}')
         data = response.json()
         logging.info(f'Expected animal type = {type}, response animal type = {data["type"]}')
         assert data['type'] == type
@@ -94,6 +99,7 @@ def test_amount(url):
     amount_list = [2, 250, 500]
     for amount in amount_list:
         response = get(url + endpoint, params={'amount': amount})
+        logging.debug(f'Response headers: {response.headers}')
         data = response.json()
         logging.info(f'Expected amount = {amount}, response amount = {len(data)}')
         assert len(data) == amount
@@ -108,6 +114,7 @@ def test_amount(url):
     negative_amount_list = [501, 0, -1]
     for amount in negative_amount_list:
         response_negativ_fact = get(url + endpoint, params={'amount': amount})
+        logging.debug(f'Response headers: {response.headers}')
         status_code = response_negativ_fact.ok
         logging.error(f'Get negativ amount = {amount}, server response expected = "False", server real response = {status_code}')
         assert status_code == False
@@ -120,8 +127,10 @@ def test_random_fact(url):
     facts_list = []
     for _ in range(5):  # conclusion of 5 facts
         response = get(url + endpoint)
+        logging.debug(f'Response headers: {response.headers}')
         fact = response.json()['text']
         facts_list.append(fact)
+    logging.debug(f'Send a 5 resquests')
     logging.info(f'Expected: unique fact >=1, response: unique facts = {len(set(facts_list))}')
     assert len(set(facts_list)) > 1  # check the uniqueness of at least 1 value
     
@@ -136,6 +145,7 @@ def test_id_fact(url):
                     }
     for id_key in id_fact_spec.keys():
         response = get(url + endpoint + id_key)
+        logging.debug(f'Response headers: {response.headers}')
         data = response.json()
         logging.info(f'Expected fact = {id_fact_spec[id_key]}, response fact = {data["text"]}')
         assert data['text'] == id_fact_spec[id_key]
